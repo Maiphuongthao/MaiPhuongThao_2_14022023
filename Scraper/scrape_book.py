@@ -11,10 +11,10 @@ def book_info(soup):
     product_info = {}
     for td in info:
         product_info["universal_product_code"] = info.select('tr>td')[0].text
-        product_info["price_excluding_tax"] = info.select('tr>td')[2].text.strip('£')
+        product_info["price_excluding_tax"] =info.select('tr>td')[2].text.strip('£')
         product_info["price_including_tax"] = info.select('tr>td')[3].text.strip('£')
         available = info.select('tr>td')[5].text
-        product_info["number_available"] = re.findall("[0-9]+", available)[0]
+        product_info["number_available"] = re.findall("[0-9]+",available)[0]
     return product_info
 
 
@@ -32,15 +32,15 @@ def rating_number(soup):
     return number_rating
 
 
-def scrap_book_url(url):
+def book_url(url):
     res = requests.get(url)
-    if res.ok:
+    if (res.ok):
         soup = BeautifulSoup(res.content, 'html.parser')
     return soup
 
-def scrap_book(url):
 
-    soup = scrap_book_url(url)
+def scrap_book(url):
+    soup = book_url(url)
 
     title = soup.h1.text
     description = soup.select("article > p")[0].text
@@ -60,4 +60,4 @@ def scrap_book(url):
     return book
 
 
-scrap_book(url)
+print(scrap_book(url))
