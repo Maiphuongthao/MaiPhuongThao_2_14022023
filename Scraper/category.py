@@ -1,6 +1,8 @@
 import csv
 from pathlib import Path
 
+import requests
+
 import scrape_book
 
 url_1 = "http://books.toscrape.com/catalogue/category/books/sequential-art_5/index.html"
@@ -46,7 +48,33 @@ def write_to_csv(books, category_name):
         writer.writerows(books)
 
 
+def save_image(books):
+    file_path = Path("../images")
+
+    if not Path(file_path).exists():
+        Path.mkdir(file_path)
+
+    for book in books:
+        image_source = requests.get(book["product_page_url"])
+        suffix = Path(book["product_page_url"]).suffix
+
+        name = book["title"].translate({ord(c): "_" for c in "!@#$%^&*()[]{};:,./<>?\|`~-=_+"})
+        if suffix not in ['.jpg', '.jpeg', '.png', '.gif']:
+            output = name + ".png"
+        else:
+            output = name + suffix
+        path = file_path.joinpath(output)
+        with open(path, 'wb') as file:
+            file.write(image_source.content)
+
+
 def scrape_categories(url_category):
+    """
+    scrap books's url
+    scrape 1st page then continue scraping next page
+    :param url_category:
+    :return:
+    """
     soup = scrape_book.scrape_url(url_1)
     # pager = page(soup)
     books = []
@@ -64,6 +92,7 @@ def scrape_categories(url_category):
         pager = soup.find('li', class_='next')
     # else:
     write_to_csv(books, category_name)
+    save_image(books)
     return books
 
 
