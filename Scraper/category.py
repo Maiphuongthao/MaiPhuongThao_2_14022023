@@ -1,4 +1,5 @@
 import csv
+from pathlib import Path
 
 import scrape_book
 
@@ -31,19 +32,24 @@ def get_books_infos(soup):
     return books_infos
 
 
-def write_to_csv(books):
-    with open('books_in_category.csv', 'w', newline='') as book_csv:
-        writer = csv.DictWriter(book_csv, fieldnames=books[0].keys())
+def write_to_csv(books, category_name):
+    file_name = f'books_in_{category_name}_category.csv'
+    file_path = Path("../csv")
+
+    if not Path(file_path).exists():
+        Path.mkdir(file_path)
+
+    with open(str(file_path) +"/"+ file_name, 'w', newline='') as book_csv:
+        writer = csv.DictWriter(book_csv, fieldnames=books[0])
         writer.writeheader()
-        for book in books:
-            breakpoint()
-            writer.writerows(book.values())
+        writer.writerows(books)
 
 
 def scrape_categories(url_category):
     soup = scrape_book.scrape_url(url_1)
     # pager = page(soup)
     books = []
+    category_name = soup.h1.text.replace(" ", "_")
     books.extend(get_books_infos(soup))
     pager = soup.find('li', class_='next')
 
@@ -56,7 +62,7 @@ def scrape_categories(url_category):
         books.extend(get_books_infos(soup))
         pager = soup.find('li', class_='next')
     # else:
-    write_to_csv(books)
+    write_to_csv(books, category_name)
     return books
 
 
