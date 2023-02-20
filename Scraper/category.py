@@ -39,7 +39,8 @@ def write_to_csv(books, category_name):
     if not Path(file_path).exists():
         Path.mkdir(file_path)
 
-    with open(str(file_path) +"/"+ file_name, 'w', newline='') as book_csv:
+    path = file_path.joinpath(file_name)
+    with open(path, 'w', newline='') as book_csv:
         writer = csv.DictWriter(book_csv, fieldnames=books[0])
         writer.writeheader()
         writer.writerows(books)
