@@ -20,6 +20,9 @@ wheels/
 *.egg
 *.manifest
 *.spec
+ .ipynb_checkpoints/
+
+
 
 # If you are using PyCharm #
 .idea/
@@ -45,3 +48,15 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+
+# Fichiers CSV
+/csv
+*.csv
+
+# Dossier des images
+/images
+
+# Images
+*.jpg
+
+.DS_Store
