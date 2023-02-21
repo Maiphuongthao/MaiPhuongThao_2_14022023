@@ -1,11 +1,10 @@
+import requests
 import csv
 from pathlib import Path
+from Scraper import scrape_book
+import emoji
 
-import requests
 
-import scrape_book
-
-url_1 = "http://books.toscrape.com/catalogue/category/books/sequential-art_5/index.html"
 
 """def page(soup):
     pager = soup.find('li', class_='current').text
@@ -36,7 +35,7 @@ def get_books_infos(soup):
 
 def write_to_csv(books, category_name):
     file_name = f'books_in_{category_name}_category.csv'
-    file_path = Path("../csv")
+    file_path = Path("csv")
 
     if not Path(file_path).exists():
         Path.mkdir(file_path)
@@ -49,16 +48,16 @@ def write_to_csv(books, category_name):
 
 
 def save_image(books):
-    file_path = Path("../images")
+    file_path = Path("images")
 
     if not Path(file_path).exists():
         Path.mkdir(file_path)
 
     for book in books:
-        image_source = requests.get(book["product_page_url"])
-        suffix = Path(book["product_page_url"]).suffix
+        image_source = requests.get(book["image_url"])
+        suffix = Path(book["image_url"]).suffix
 
-        name = book["title"].translate({ord(c): "_" for c in "!@#$%^&*()[]{};:,./<>?\|`~-=_+"})
+        name = book["title"].translate({ord(c): "_" for c in "!@#$%^&*()[]{};:,./<>?\|`~-= +"})
         if suffix not in ['.jpg', '.jpeg', '.png', '.gif']:
             output = name + ".png"
         else:
@@ -68,20 +67,20 @@ def save_image(books):
             file.write(image_source.content)
 
 
-def scrape_categories(url_category):
+def scrape_one_category(url_category):
     """
-    scrap books's url
+    scrap books's url in one category
     scrape 1st page then continue scraping next page
     :param url_category:
     :return:
     """
-    soup = scrape_book.scrape_url(url_1)
+    soup = scrape_book.scrape_url(url_category)
     # pager = page(soup)
     books = []
     category_name = soup.h1.text.replace(" ", "_")
     books.extend(get_books_infos(soup))
     pager = soup.find('li', class_='next')
-
+    len_book = len(books)
     # if pager > 1:
     # for p in range(1, pager + 1):
     while pager:
@@ -93,7 +92,8 @@ def scrape_categories(url_category):
     # else:
     write_to_csv(books, category_name)
     save_image(books)
+
+    print(emoji.emojize(':open_book:'))
+    print(f'{len_book} books in {category_name} category.')
     return books
 
-
-print(len(scrape_categories(url_1)))
