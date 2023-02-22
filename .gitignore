@@ -60,3 +60,6 @@ venv.bak/
 *.jpg
 
 .DS_Store
+
+#gitignore file
+#.gitignore
