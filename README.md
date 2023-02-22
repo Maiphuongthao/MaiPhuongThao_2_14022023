@@ -24,7 +24,7 @@
 
 # Objectives
 
-Scraping pf [book to scrape](http://books.toscrape.com/) with **BeautifulSoup4** and **Requests**, export book datas to .csv files and download cover images to the *"images"* folder.
+Scraping of [book to scrape](http://books.toscrape.com/) with **BeautifulSoup4** and **Requests**, export book datas to .csv files and download cover images to the *"images"* folder.
 
 :+1: **ETL** process:
 
